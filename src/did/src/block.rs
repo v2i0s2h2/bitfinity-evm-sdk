@@ -1,8 +1,33 @@
+/*
+Ye module Ethereum blockchain ke core concepts ko Rust mein implement karta hai. Iska matlab hai ki aap Ethereum-compatible systems ya tools Rust mein develop kar sakte hain. 
+
+Custom Ethereum clients ya nodes develop karne ke liye
+Ethereum-compatible sidechains ya Layer 2 solutions banane ke liye
+Advanced Ethereum tools ya analytics platforms develop karne ke liye
+Research projects mein, jahan Ethereum ke behavior ko modify ya analyze karna ho
+
+
+*/
+
 use std::borrow::Cow;
+/* ye Cow enum ek bahut hi smart cheez hai Rust programming language mein. Iska full form hai "Clone on Write". Ye basically ek aisa pointer hai jo borrowed data ko handle karta hai, lekin jab zaroorat pade tab hi usko clone karta hai. Samjhe?
+Is enum ke do variants hain:
+
+Borrowed: Jo sirf data ka reference store karta hai
+Owned: Jo actual data ko khud store karta hai
+
+Ab main point ye hai ki jab tak aap sirf data ko read kar rahe ho, tab tak Borrowed variant use hota hai. Lekin jaise hi aap us data ko modify karna chahte ho, ye automatically Owned variant mein convert ho jata hai. Matlab, data ka ek naya copy ban jata hai jise aap modify kar sakte ho.
+Iska ek bahut bada fayda ye hai ki unnecessary memory allocation se bach sakte ho. Jab tak zaroorat nahi, tab tak original data ka hi reference use hota rahega.
+ */
 use std::collections::HashMap;
 
+
 use candid::{CandidType, Deserialize};
+/*
+Ye basically ek crate hai jo Rust types ko Candid format mein aur Candid ko wapas Rust types mein convert karta hai. Ye Internet Computer ke saath communicate karne ke liye bahut zaroori hai.
+ */
 use ethers_core::types::Log as EthersLog;
+
 use ic_stable_structures::{Bound, Storable};
 use rlp::{Decodable, DecoderError, Encodable, Rlp, RlpStream};
 use serde::Serialize;
@@ -19,6 +44,30 @@ use crate::keccak::{keccak_hash, KECCAK_EMPTY_LIST_RLP, KECCAK_NULL_RLP};
 use crate::{codec, HaltError, Transaction};
 
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize, CandidType)]
+
+/*
+
+1. `TX`: Ye main generic parameter hai `Block` struct ka. Iska matlab hai ki `Block` different types ke transactions ko store kar sakta hai. Do common use cases hain:
+
+   a) `Block<H256>`: Jab sirf transaction hashes store karne hain.
+   b) `Block<Transaction>`: Jab complete transaction details store karni hain.
+
+2. `H256`: Ye actually ek specific type hai, koi generic nahi. Ye 32-byte hash ko represent karta hai. Jab `Block<H256>` use hota hai, tab transactions field mein sirf transaction hashes hoti hain.
+
+3. `T`: Ye generic type kuch specific implementations mein use hota hai, jaise `From` trait ke implementation mein. Ye allow karta hai ki different types of data ko `Block` mein convert kiya ja sake.
+
+4. `Transaction`: Ye bhi ek specific type hai, generic nahi. Jab `Block<Transaction>` use hota hai, tab transactions field mein complete transaction objects hote hain.
+
+In different types ka use karne se code more flexible ho jata hai. For example:
+
+1. Jab aapko sirf lightweight block information chahiye, aap `Block<H256>` use kar sakte hain.
+2. Jab aapko full transaction details chahiye, aap `Block<Transaction>` use kar sakte hain.
+3. Generic implementations (`From<Block<D>>`) allow karte hain ki aap different types of data ko easily `Block` mein convert kar saken.
+
+Ye design pattern allows for more efficient memory usage and flexibility in how the `Block` struct can be used in different contexts.
+
+Kya ye explanation clear hai? Koi aur sawaal hai iske baare mein?
+*/
 pub struct Block<TX> {
     /// Hash of the block
     pub hash: H256,

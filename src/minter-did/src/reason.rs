@@ -1,3 +1,7 @@
+/// reason.rs: Is file mein Icrc2Burn struct hai. Ye ICRC-2 tokens (jo IC par ek token standard hai) ko burn karke ERC721 mint karne ke liye use hota hai. Isme ye information hoti hai:
+
+
+
 use candid::{CandidType, Principal};
 use did::{H160, U256};
 use ic_exports::icrc_types::icrc1::account::Subaccount;
@@ -26,3 +30,9 @@ pub struct Icrc2Burn {
     /// If None, mint transaction will not be sent and user can send it by himself.
     pub fee_payer: Option<H160>,
 }
+
+// sender: Kon burn kar raha hai
+// amount: Kitna burn karna hai
+// icrc2_token_principal: canister id of icrc2 ledger
+// recipient_address: Naya ERC721 kisko milega
+// fee_payer: Mint ka fee kon dega

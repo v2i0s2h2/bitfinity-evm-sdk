@@ -1,3 +1,5 @@
+/// order.rs:Is file mein MintOrder aur SignedMintOrder structs define kiye gaye hain. Ye ERC721 tokens ke minting ke liye bahut important hai:
+
 use std::ops::{Deref, DerefMut};
 use std::rc::Rc;
 
@@ -15,6 +17,9 @@ use crate::id256::Id256;
 
 /// Data which should be signed and provided to the `BftBridge.mint()` call
 /// to perform mint.
+
+/// MintOrder: Ye struct minting ke liye saari zaruri information rakhta hai, jaise amount, sender, recipient, token details, etc.
+
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct MintOrder {
     /// Amount of tokens to mint.
@@ -89,6 +94,9 @@ impl MintOrder {
     ///
     /// All integers encoded in big-endian format.
     /// Signature signs KECCAK hash of the signed data.
+    /// 
+    /// encode_and_sign function: Ye MintOrder ko encode karke sign karta hai, jo security ke liye important hai.
+
     pub async fn encode_and_sign(
         &self,
         signer: &impl TransactionSigner,
@@ -126,6 +134,10 @@ impl MintOrder {
     }
 
     /// Decode Self from bytes.
+    
+    /// decode_data aur decode_signed functions: Ye signed data ko wapas original MintOrder mein convert karte hain.
+
+
     pub fn decode_data(data: &[u8]) -> Option<Self> {
         if data.len() < Self::ENCODED_DATA_SIZE {
             return None;

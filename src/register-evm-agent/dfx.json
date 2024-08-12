@@ -1,0 +1,20 @@
+{
+    "canisters": {
+        "register_evm_agent": {
+            "type": "rust",
+            "main": "src/main.rs",
+            "package": "register_evm_agent",
+            "candid": "src/evm.did",
+            "build": {
+                "packtool": [
+                    "cargo",
+                    "build",
+                    "--target",
+                    "wasm32-unknown-unknown",
+                    "--release"
+                ]
+            }
+        }
+    }
+   
+}

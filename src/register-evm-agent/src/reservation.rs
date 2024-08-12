@@ -13,12 +13,12 @@ use crate::error::{Error, Result};
 type EvmCanisterAgentClient = EvmCanisterClient<IcAgentClient>;
 
 pub struct ReservationService<'a> {
-    client: EvmCanisterAgentClient,
-    amount_to_mint: Option<u64>,
-    gas_price: U256,
-    reserve_canister_id: Principal,
-    agent_principal: Principal,
-    wallet: Wallet<'a, SigningKey>,
+    client: EvmCanisterAgentClient, // TOD what about the client being created here
+    amount_to_mint: Option<u64>, // Amount to mint from the client to the server 
+    gas_price: U256, // gas price 
+    reserve_canister_id: Principal, // Reserved for future use by clients that  wish to reserve this identifier for future use  by 
+    agent_principal: Principal, // agent principal 
+    wallet: Wallet<'a, SigningKey>, // The wallet associated with this transaction      
 }
 
 impl<'a> ReservationService<'a> {
